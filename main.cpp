@@ -63,8 +63,9 @@ int main(int argc, char *argv[]) {
     }
     // Sorting circles's container
     std::sort(circles.begin(), circles.end(), [](const auto &left, const auto &right) -> bool {return left->getRadius() < right->getRadius();});
+    std::cout << "Radii: ";
     for (const auto &circle : circles) {
-        std::cout << circle->getRadius() << " ";
+        std::cout <<  circle->getRadius() << " ";
     }
     std::cout << std::endl;
 
