@@ -30,10 +30,6 @@ std::vector<float> Ellips::getFirstDerivative(float t) {
     return result;
 }
 
-std::pair<float, float> Ellips::getRadius() {
-    return std::make_pair(xRad, yRad);
-}
-
 std::string Ellips::getType() {
     return "Ellips";
 }
@@ -44,6 +40,10 @@ Circle::Circle(float _rad) : Ellips(_rad, _rad){
 }
 
 Circle::~Circle() {
+}
+
+float Circle::getRadius() {
+    return xRad;
 }
 
 std::string Circle::getType() {
@@ -78,10 +78,6 @@ std::vector<float> Helix::getFirstDerivative(float t) {
     float yPoint = rad * static_cast<float>(cos(t));
     std::vector<float> result = {xPoint, yPoint, stepHelper};
     return result;
-}
-
-std::pair<float, float> Helix::getRadius() {
-    return std::make_pair(rad, rad);
 }
 
 std::string Helix::getType() {

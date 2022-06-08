@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <omp.h>
 
 // Function for generate randon uint value
 uint32_t generateRandValue(uint32_t val) {
@@ -41,7 +42,7 @@ std::vector<std::shared_ptr<ICurve>> createCurves(size_t count) {
 
 int main(int argc, char *argv[]) {
     // Initing vector of curves with random curve with random parametres
-    std::vector<std::shared_ptr<ICurve>> curves = createCurves(10);
+    std::vector<std::shared_ptr<ICurve>> curves = createCurves(20);
 
     // Print point and derivative for all curves
     for(const auto &curve : curves) {
@@ -54,24 +55,35 @@ int main(int argc, char *argv[]) {
     }
 
     // Populating a second container that would contain only circles from the first container.
-    std::vector<std::shared_ptr<ICurve>> circles;
+    std::vector<std::shared_ptr<Circle>> circles;
     for(const auto &curve : curves) {
         if(curve->getType() == "Circle") {
-            circles.push_back(curve);
+            circles.push_back(std::reinterpret_pointer_cast<Circle>(curve));
         }
     }
-
     // Sorting circles's container
-    std::sort(circles.begin(), circles.end(), [](const auto &left, const auto &right) -> bool {return left->getRadius().first < right->getRadius().first;});
+    std::sort(circles.begin(), circles.end(), [](const auto &left, const auto &right) -> bool {return left->getRadius() < right->getRadius();});
     for (const auto &circle : circles) {
-        std::cout << circle->getRadius().first << " ";
+        std::cout << circle->getRadius() << " ";
     }
     std::cout << std::endl;
 
     //Computing total sum of radii
-    auto sum = std::accumulate(circles.begin(), circles.end(), 0.0f,
-            [](auto start_val, const auto &circle) -> float {return start_val + circle->getRadius().first;});
-    std::cout << "Total sum: " << sum << std::endl;
-
+    {
+        auto sum = std::accumulate(std::next(circles.begin()), circles.end(), circles[0]->getRadius(),
+                [](auto start_val, const auto &circle) -> float {return start_val + circle->getRadius();});
+        std::cout << "Total sum: " << sum << std::endl;
+    }
+    //Computing total sum with OpenMP
+    float sum = 0.0f;
+    #pragma omp parallel for shared(circles)
+            for (int i = 0; i < circles.size(); i++) {
+                #pragma omp critical
+                {
+                    sum = sum + circles[i]->getRadius();
+                }
+            }
+    std::cout << "Total sum in parallel: " << sum << std::endl;
+    std::cin.get();
     return 0;
 }

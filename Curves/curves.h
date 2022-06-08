@@ -11,7 +11,6 @@ public:
     virtual std::vector<float> getPoint(float t) = 0;
     virtual std::vector<float> getFirstDerivative(float t) = 0;
     virtual std::string getType() = 0;
-    virtual std::pair<float, float> getRadius() = 0;
 };
 
 class Ellips : public ICurve {
@@ -23,14 +22,13 @@ public:
     virtual std::vector<float> getPoint(float t) override;
     virtual std::vector<float> getFirstDerivative(float t) override;
     virtual std::string getType() override;
-    virtual std::pair<float, float> getRadius() override;
 };
 
 class Circle : public Ellips {
 public:
-    float rad;
     Circle(float _rad);
     ~Circle();
+    float getRadius();
     std::string getType() override;
 };
 
@@ -43,5 +41,4 @@ public:
     std::vector<float> getPoint(float t) override;
     std::vector<float> getFirstDerivative(float t) override;
     std::string getType() override;
-    std::pair<float, float> getRadius() override;
 };
