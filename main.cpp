@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
             circles.push_back(std::reinterpret_pointer_cast<Circle>(curve));
         }
     }
+
     // Sorting circles's container
     std::sort(circles.begin(), circles.end(), [](const auto &left, const auto &right) -> bool {return left->getRadius() < right->getRadius();});
     std::cout << "Radii: ";
@@ -75,6 +76,7 @@ int main(int argc, char *argv[]) {
                 [](auto start_val, const auto &circle) -> float {return start_val + circle->getRadius();});
         std::cout << "Total sum: " << sum << std::endl;
     }
+
     //Computing total sum with OpenMP
     float sum = 0.0f;
     #pragma omp parallel for shared(circles)

@@ -67,15 +67,15 @@ Helix::~Helix() {
 }
 
 std::vector<float> Helix::getPoint(float t) {
-    float xPoint = rad * static_cast<float>(cos(t));
-    float yPoint = rad * static_cast<float>(sin(t));
+    float xPoint = t * static_cast<float>(cos(t));
+    float yPoint = t * static_cast<float>(sin(t));
     std::vector<float> result = {xPoint, yPoint, t * stepHelper};
     return result;
 }
 
 std::vector<float> Helix::getFirstDerivative(float t) {
-    float xPoint = -rad * static_cast<float>(sin(t));
-    float yPoint = rad * static_cast<float>(cos(t));
+    float xPoint = static_cast<float>(cos(t)) - t * static_cast<float>(sin(t));
+    float yPoint = static_cast<float>(sin(t)) + t * static_cast<float>(cos(t));
     std::vector<float> result = {xPoint, yPoint, stepHelper};
     return result;
 }
