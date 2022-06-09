@@ -45,13 +45,19 @@ int main(int argc, char *argv[]) {
     std::vector<std::shared_ptr<ICurve>> curves = createCurves(20);
 
     // Print point and derivative for all curves
+    std::vector<float> point;
+    point.reserve(3);
+    std::vector<float> firstDer;
+    point.reserve(3);
     for(const auto &curve : curves) {
-        std::vector<float> point = curve->getPoint(static_cast<float>(M_PI / 4));
-        std::vector<float> firstDer = curve->getFirstDerivative(static_cast<float>(M_PI / 4));
+        point = curve->getPoint(static_cast<float>(M_PI / 4));
+        firstDer = curve->getFirstDerivative(static_cast<float>(M_PI / 4));
         std::cout << "point\n";
         std::cout << "{ x: " << point[0] << ", y: " << point[1] << ", z: " << point[2] << " }\n";
         std::cout << "derivative\n";
         std::cout << "{ x: " << firstDer[0] << ", y: " << firstDer[1] << ", z: " << firstDer[2] << " }\n";
+        point.clear();
+        firstDer.clear();
     }
 
     // Populating a second container that would contain only circles from the first container.
