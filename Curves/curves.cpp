@@ -13,9 +13,6 @@ Ellips::Ellips(float _xRad, float _yRad) {
     }
 }
 
-Ellips::~Ellips() {
-}
-
 std::vector<float> Ellips::getPoint(float t) {
     float xPoint = xRad * static_cast<float>(cos(t));
     float yPoint = yRad * static_cast<float>(sin(t));
@@ -36,14 +33,11 @@ std::string Ellips::getType() {
 // End ellips realization
 
 // Circle realization
-Circle::Circle(float _rad) : Ellips(_rad, _rad){
-}
-
-Circle::~Circle() {
+Circle::Circle(float _rad) : Ellips(_rad, _rad), rad(_rad){
 }
 
 float Circle::getRadius() {
-    return xRad;
+    return rad;
 }
 
 std::string Circle::getType() {
@@ -61,9 +55,6 @@ Helix::Helix(float _rad, float _stepHelper) : rad(_rad), stepHelper(_stepHelper)
         stepHelper = _stepHelper;
     }
 
-}
-
-Helix::~Helix() {
 }
 
 std::vector<float> Helix::getPoint(float t) {
