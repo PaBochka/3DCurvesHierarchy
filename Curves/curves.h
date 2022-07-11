@@ -19,18 +19,20 @@ private:
     float yRad;
 public:
     Ellips(float _xRad, float _yRad);
-    virtual ~Ellips() = default;
-    virtual std::vector<float> getPoint(float t) override;
-    virtual std::vector<float> getFirstDerivative(float t) override;
-    virtual std::string getType() override;
+    ~Ellips() = default;
+    std::vector<float> getPoint(float t) override;
+    std::vector<float> getFirstDerivative(float t) override;
+    std::string getType() override;
 };
 
-class Circle : public Ellips {
+class Circle : public ICurve {
 private:
     float rad;
 public:
     Circle(float _rad);
     ~Circle() = default;
+    std::vector<float> getPoint(float t) override;
+    std::vector<float> getFirstDerivative(float t) override;
     float getRadius();
     std::string getType() override;
 };

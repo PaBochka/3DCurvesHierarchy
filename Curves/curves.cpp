@@ -33,7 +33,27 @@ std::string Ellips::getType() {
 // End ellips realization
 
 // Circle realization
-Circle::Circle(float _rad) : Ellips(_rad, _rad), rad(_rad){
+Circle::Circle(float _rad) : rad(_rad) {
+    if(_rad <= 0) {
+        throw std::runtime_error("radius is lower or equal then 0");
+    }
+    else {
+        rad = _rad;
+    }
+}
+
+std::vector<float> Circle::getPoint(float t) {
+    float xPoint = rad * static_cast<float>(cos(t));
+    float yPoint = rad * static_cast<float>(sin(t));
+    std::vector<float> result = {xPoint, yPoint, 0};
+    return result;
+}
+
+std::vector<float> Circle::getFirstDerivative(float t) {
+    float xPoint = -rad * static_cast<float>(sin(t));
+    float yPoint = rad * static_cast<float>(cos(t));
+    std::vector<float> result = {xPoint, yPoint, 0};
+    return result;
 }
 
 float Circle::getRadius() {
@@ -54,7 +74,6 @@ Helix::Helix(float _rad, float _stepHelper) : rad(_rad), stepHelper(_stepHelper)
         rad = _rad;
         stepHelper = _stepHelper;
     }
-
 }
 
 std::vector<float> Helix::getPoint(float t) {
