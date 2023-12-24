@@ -64,7 +64,11 @@ int main(int argc, char *argv[]) {
     std::vector<std::shared_ptr<Circle>> circles;
     for(const auto &curve : curves) {
         if(curve->getType() == "Circle") {
-            circles.push_back(std::reinterpret_pointer_cast<Circle>(curve));
+            auto circle = std::dynamic_pointer_cast<Circle>(curve);
+            if (!circle) {
+                 throw std::runtime_error("Invalid conversion");
+            }
+            circles.push_back(circle);
         }
     }
 
