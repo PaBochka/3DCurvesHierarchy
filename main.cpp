@@ -1,10 +1,10 @@
 #include "Curves/curves.h"
+
 #include <memory>
 #include <random>
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include <omp.h>
 
 // Function for generate randon uint value
 uint32_t generateRandValue(uint32_t val) {
@@ -22,20 +22,20 @@ std::vector<std::shared_ptr<ICurve>> createCurves(size_t count) {
     for(size_t i = 0; i < count; ++i) {
         auto randomValue = generateRandValue(2);
         switch(randomValue) {
-        case 0: {
-            result.emplace_back(std::make_shared<Ellips>(static_cast<float>(generateRandValue(9) + 1),
-                                                         static_cast<float>(generateRandValue(9) + 1)));
-            break;
+            case 0: {
+                result.emplace_back(std::make_shared<Ellips>(static_cast<float>(generateRandValue(9) + 1),
+                static_cast<float>(generateRandValue(9) + 1)));
+                break;
+            }
+            case 1: {
+                result.emplace_back(std::make_shared<Circle>(static_cast<float>(generateRandValue(9) + 1)));
+                break;
+            }
+            case 2: {
+                result.emplace_back(std::make_shared<Helix>(static_cast<float>(generateRandValue(9) + 1)));
+                break;
+            }
         }
-        case 1: {
-            result.emplace_back(std::make_shared<Circle>(static_cast<float>(generateRandValue(9) + 1)));
-            break;
-        }
-        case 2: {
-            result.emplace_back(std::make_shared<Helix>(static_cast<float>(generateRandValue(9) + 1)));
-            break;
-        }
-    }
     }
     return result;
 }
@@ -43,15 +43,15 @@ std::vector<std::shared_ptr<ICurve>> createCurves(size_t count) {
 int main(int argc, char *argv[]) {
     // Initing vector of curves with random curve with random parametres
     std::vector<std::shared_ptr<ICurve>> curves = createCurves(20);
-
+    
     // Print point and derivative for all curves
     std::vector<float> point;
     point.reserve(3);
     std::vector<float> firstDer;
     point.reserve(3);
     for(const auto &curve : curves) {
-        point = curve->getPoint(static_cast<float>(M_PI / 4));
-        firstDer = curve->getFirstDerivative(static_cast<float>(M_PI / 4));
+        point = curve->getPoint(static_cast<float>(std::numbers::pi / 4));
+        firstDer = curve->getFirstDerivative(static_cast<float>(std::numbers::pi / 4));
         std::cout << "point\n";
         std::cout << "{ x: " << point[0] << ", y: " << point[1] << ", z: " << point[2] << " }\n";
         std::cout << "derivative\n";
@@ -59,19 +59,16 @@ int main(int argc, char *argv[]) {
         point.clear();
         firstDer.clear();
     }
-
+    
     // Populating a second container that would contain only circles from the first container.
     std::vector<std::shared_ptr<Circle>> circles;
     for(const auto &curve : curves) {
-        if(curve->getType() == "Circle") {
-            auto circle = std::dynamic_pointer_cast<Circle>(curve);
-            if (!circle) {
-                 throw std::runtime_error("Invalid conversion");
-            }
+        auto circle = std::dynamic_pointer_cast<Circle>(curve);
+        if (circle) {
             circles.push_back(circle);
         }
     }
-
+    
     // Sorting circles's container
     std::sort(circles.begin(), circles.end(), [](const auto &left, const auto &right) -> bool {return left->getRadius() < right->getRadius();});
     std::cout << "Radii: ";
@@ -79,24 +76,28 @@ int main(int argc, char *argv[]) {
         std::cout <<  circle->getRadius() << " ";
     }
     std::cout << std::endl;
-
+    
     //Computing total sum of radii
     {
         auto sum = std::accumulate(std::next(circles.begin()), circles.end(), circles[0]->getRadius(),
-                [](auto start_val, const auto &circle) -> float {return start_val + circle->getRadius();});
+        [](auto start_val, const auto &circle) -> float {return start_val + circle->getRadius();});
         std::cout << "Total sum: " << sum << std::endl;
     }
-
+    
+#if 0
+    #include <omp.h>
     //Computing total sum with OpenMP
     float sum = 0.0f;
     #pragma omp parallel for shared(circles)
-            for (int i = 0; i < circles.size(); i++) {
-                #pragma omp critical
-                {
-                    sum = sum + circles[i]->getRadius();
-                }
-            }
+    for (int i = 0; i < circles.size(); i++) {
+        #pragma omp critical
+        {
+            sum = sum + circles[i]->getRadius();
+        }
+    }
     std::cout << "Total sum in parallel: " << sum << std::endl;
     std::cin.get();
+#endif
+
     return 0;
 }

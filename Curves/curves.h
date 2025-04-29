@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#define M_PI 3.14159265358979323846
+#include <numbers>
 
 class ICurve
 {
@@ -10,7 +10,6 @@ public:
     virtual ~ICurve() = default;
     virtual std::vector<float> getPoint(float t) = 0;
     virtual std::vector<float> getFirstDerivative(float t) = 0;
-    virtual std::string getType() = 0;
 };
 
 class Ellips : public ICurve {
@@ -22,7 +21,6 @@ public:
     ~Ellips() = default;
     std::vector<float> getPoint(float t) override;
     std::vector<float> getFirstDerivative(float t) override;
-    std::string getType() override;
 };
 
 class Circle : public ICurve {
@@ -34,7 +32,6 @@ public:
     std::vector<float> getPoint(float t) override;
     std::vector<float> getFirstDerivative(float t) override;
     float getRadius();
-    std::string getType() override;
 };
 
 class Helix : public ICurve {
@@ -46,5 +43,4 @@ public:
     ~Helix() = default;
     std::vector<float> getPoint(float t) override;
     std::vector<float> getFirstDerivative(float t) override;
-    std::string getType() override;
 };
